@@ -6,6 +6,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd">
   <!--  스프링이 관리해야 하는 컴포넌트를 찾아서 빈으로 등록 -->
   <context:component-scan base-package="org.ykj.ex00.sample"/>
+  <context:component-scan base-package="org.ykj.ex00.service"/>
 
   <bean name="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
     <property name="driverClassName" value="org.mariadb.jdbc.Driver"/>

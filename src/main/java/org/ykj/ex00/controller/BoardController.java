@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.ykj.ex00.domain.BoardVO;
 import org.ykj.ex00.domain.Criteria;
+import org.ykj.ex00.domain.PageDTO;
 import org.ykj.ex00.service.BoardService;
 
 import java.util.List;
@@ -35,6 +36,8 @@ public class BoardController {
     List<BoardVO> pageList = boardService.getPage(criteria);
     log.info(" >> "+pageList);
     model.addAttribute("list", pageList);
+    PageDTO pageDTO = new PageDTO(criteria, boardService.getTotalCnt(criteria));
+    model.addAttribute("pageMaker", pageDTO);
   }
 
   @GetMapping({"/{job}/{bno}"})

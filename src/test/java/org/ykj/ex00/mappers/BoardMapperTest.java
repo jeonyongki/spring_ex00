@@ -26,7 +26,7 @@ class BoardMapperTest {
 
   @Test
   public void insertTest(){
-    for(int i=1; i<=100; i++) {
+    for(int i=1; i<=1000; i++) {
       BoardVO boardVO = BoardVO.builder()
           .title("test"+i)
           .content("no content"+i)

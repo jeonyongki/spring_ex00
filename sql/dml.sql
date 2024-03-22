@@ -14,3 +14,6 @@ update tbl_board
 set title='테스트글old', content='no content..', updateDate=now()
 where bno = 3;
 
+select * from tbl_board order by bno desc limit 1, 20;
+
+select count(bno) from tbl_board;

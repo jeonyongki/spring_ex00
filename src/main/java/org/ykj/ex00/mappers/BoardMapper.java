@@ -12,6 +12,8 @@ public interface BoardMapper {
 
   List<BoardVO> getPage(Criteria criteria);
 
+  int getTotalCnt(Criteria criteria);
+
   BoardVO select(Long bno);
 
   int update(BoardVO boardVO);

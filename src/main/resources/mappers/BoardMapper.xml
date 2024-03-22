@@ -32,4 +32,7 @@
     limit #{skip}, #{amount}
   </select>
 
+  <select id="getTotalCnt" resultType="int">
+    select count(bno) from tbl_board
+  </select>
 </mapper>

@@ -20,10 +20,14 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">DataTables Example<br>${cri}</h6>
+    <h6 class="m-0 font-weight-bold text-primary">DataTables Example<br></h6>
   </div>
   <div class="card-body">
     <div class="table-responsive">
+      <form id="actionForm" method="get" action="/board/list">
+        <input type="hidden" name="pageNum" value="${cri.pageNum}">
+        <input type="hidden" name="amount" value="${cri.amount}">
+      </form>
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
         <tr>
@@ -48,17 +52,21 @@
       </table>
       <div>
         <ul class="pagination">
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">Previous</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item active">
-            <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <c:if test="${pageMaker.prev}">
           <li class="page-item">
-            <a class="page-link" href="#">Next</a>
+            <a class="page-link" href="${pageMaker.beginPage -1}" tabindex="-1">Previous</a>
           </li>
+          </c:if>
+          <c:forEach begin="${pageMaker.beginPage}" end="${pageMaker.endPage}" var="num">
+          <li class="page-item ${cri.pageNum == num ? 'active' : ''} ">
+            <a class="page-link" href="${num}">${num} </a>
+          </li>
+          </c:forEach>
+          <c:if test="${pageMaker.next}">
+          <li class="page-item">
+            <a class="page-link" href="${pageMaker.endPage +1}">Next</a>
+          </li>
+          </c:if>
         </ul>
       </div>
     </div>
@@ -95,12 +103,41 @@
     myModal.show();
   }
 
+  const actionForm = document.querySelector("#actionForm");
+  //게시글 조회
   document.querySelector(".tbody").addEventListener("click", (evt) => {
     const target = evt.target.closest("tr");
     const bno = target.dataset.bno;
     console.log(bno);
-    console.log(`/board/read/\${bno}`);//역슬래시로 템플릿리터럴 중복방지.
-    window.location=`/board/read/\${bno}`;
+    // console.log(`/board/read/\${bno}`);//역슬래시로 템플릿리터럴 중복방지.
+    // window.location=`/board/read/\${bno}`; //정적 처리
+
+    const before = document.querySelector("#clonedActionForm");
+    if(before) before.remove();
+
+    //폼전송 clone 처리
+    const clonedActionForm = actionForm.cloneNode(true);
+    clonedActionForm.setAttribute("action", `/board/read/\${bno}`);
+    clonedActionForm.setAttribute("id", 'clonedActionForm');
+    console.log(clonedActionForm);
+    document.body.appendChild(clonedActionForm);
+    clonedActionForm.submit();
   },false);
+
+  //페이지 조회
+  document.querySelector(".pagination").addEventListener("click", evt => {
+    evt.preventDefault();
+    const target = evt.target;
+    console.log(target);
+    const targetPage = target.getAttribute("href");
+    console.log(targetPage);
+
+    //window.location=`/board/list?pageNum=\${targetPage}`; //정적인 방법
+    //동적인 방법
+    actionForm.setAttribute("action", "/board/list");
+    actionForm.querySelector("input[name='pageNum']").value = targetPage;
+    actionForm.submit();
+  },false)
+
 </script>
 <%@ include file="../includes/end.jsp"%>

@@ -23,10 +23,32 @@
     <h6 class="m-0 font-weight-bold text-primary">DataTables Example<br></h6>
   </div>
   <div class="card-body">
+    <div>
+      <select name="typeSelect">
+        <option value="">--</option>
+        <option value="T">제목</option>
+        <option value="C">내용</option>
+        <option value="W">작성자</option>
+        <option value="TC">제목+내용</option>
+        <option value="TW">제목+작성자</option>
+        <option value="TCW">제목+내용+작성자</option>
+      </select>
+      <input type="text" name="keywordInput" value="${cri.keyword}"/>
+      <button class="btn btn-default searchBtn">Search</button>
+    </div>
+
+
+
     <div class="table-responsive">
       <form id="actionForm" method="get" action="/board/list">
         <input type="hidden" name="pageNum" value="${cri.pageNum}">
         <input type="hidden" name="amount" value="${cri.amount}">
+        <c:if test="${cri.types != null && cri.keyword != null}">
+          <c:forEach var="type" items="${cri.types}">
+            <input type="hidden" name="types" value="${type}">
+          </c:forEach>
+          <input type="hidden" name="keyword" value="<c:out value="${cri.keyword}"/> ">
+        </c:if>
       </form>
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>

@@ -2,7 +2,7 @@ package org.ykj.ex00.domain;
 
 import lombok.*;
 
-@Getter
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -10,6 +10,10 @@ import lombok.*;
 public class Criteria {
   private int pageNum = 1;
   private int amount  =10;
+
+  //null, T, C, W, TC, TW, TCW
+  private String[] types;
+  private String keyword;
 
   public void setPageNum(int pageNum) {
     if(pageNum <= 0) pageNum =1;

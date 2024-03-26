@@ -33,6 +33,7 @@ public class BoardController {
   @GetMapping("/list")
   public void list(@ModelAttribute("cri") Criteria criteria, Model model){
     log.info("list---------------------------------------------------------------------------->");
+    log.info("criteria : "+ criteria);
     List<BoardVO> pageList = boardService.getPage(criteria);
     log.info(" >> "+pageList);
     model.addAttribute("list", pageList);

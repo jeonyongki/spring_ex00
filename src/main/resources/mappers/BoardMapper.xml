@@ -26,13 +26,35 @@
     where bno = #{bno}
   </update>
 
+<!-- 검색 sql 재사용 concat 문자열을 이어 붙이는 함수 LIKE 연산자와 함께 사용 -->
+  <sql id="search">
+    <if test="(types != null and keyword != null)">
+      <foreach collection="types" item="type" open=" and ( " separator="OR" close=")">
+        <choose>
+          <when test='type.equals("T")'>
+            title like concat('%', #{keyword}, '%')
+          </when>
+          <when test='type.equals("C")'>
+            content like concat('%', #{keyword}, '%')
+          </when>
+          <when test='type.equals("W")'>
+            writer like concat('%', #{keyword}, '%')
+          </when>
+        </choose>
+      </foreach>
+    </if>
+  </sql>
+
 <!--  parameterType 자동주입후 getSkip, getAmount 호출 -->
   <select id="getPage" resultType="BoardVO">
-    select * from tbl_board where bno > 0 order by bno desc
+    select * from tbl_board where bno > 0
+      <include refid="search"/>
+    order by bno desc
     limit #{skip}, #{amount}
   </select>
 
   <select id="getTotalCnt" resultType="int">
-    select count(bno) from tbl_board
+    select count(bno) from tbl_board where bno > 0
+      <include refid="search"/>
   </select>
 </mapper>

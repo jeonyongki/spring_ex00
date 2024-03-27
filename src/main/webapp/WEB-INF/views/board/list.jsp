@@ -26,18 +26,16 @@
     <div>
       <select name="typeSelect">
         <option value="">--</option>
-        <option value="T">제목</option>
-        <option value="C">내용</option>
-        <option value="W">작성자</option>
-        <option value="TC">제목+내용</option>
-        <option value="TW">제목+작성자</option>
-        <option value="TCW">제목+내용+작성자</option>
+        <option value="T" ${cri.typeStr == 'T' ? 'selected' : ''}>제목</option>
+        <option value="C" ${cri.typeStr == 'C' ? 'selected' : ''}>내용</option>
+        <option value="W" ${cri.typeStr == 'W' ? 'selected' : ''}>작성자</option>
+        <option value="TC" ${cri.typeStr == 'TC' ? 'selected' : ''}>제목 OR 내용</option>
+        <option value="TW" ${cri.typeStr == 'TW' ? 'selected' : ''}>제목 OR 작성자</option>
+        <option value="TCW" ${cri.typeStr == 'TCW' ? 'selected' : ''}>제목 OR 내용 OR 작성자</option>
       </select>
-      <input type="text" name="keywordInput" value="${cri.keyword}"/>
+      <input type="text" name="keywordInput" value="<c:out value="${cri.keyword}"/>" >
       <button class="btn btn-default searchBtn">Search</button>
     </div>
-
-
 
     <div class="table-responsive">
       <form id="actionForm" method="get" action="/board/list">
@@ -47,7 +45,7 @@
           <c:forEach var="type" items="${cri.types}">
             <input type="hidden" name="types" value="${type}">
           </c:forEach>
-          <input type="hidden" name="keyword" value="<c:out value="${cri.keyword}"/> ">
+          <input type='hidden' name='keyword' value='<c:out value="${cri.keyword}"/>'>
         </c:if>
       </form>
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -67,7 +65,7 @@
             <td><c:out value="${board.title}"/></td>
             <td><c:out value="${board.writer}"/></td>
             <td><c:out value="${board.regDate}"/></td>
-            <td><c:out value="${board.updateDate}"/></td>
+            <td><c:out value="${board.updateDate}"/> date</td>
           </tr>
         </c:forEach>
         </tbody>
@@ -84,6 +82,8 @@
             <a class="page-link" href="${num}">${num} </a>
           </li>
           </c:forEach>
+
+
           <c:if test="${pageMaker.next}">
           <li class="page-item">
             <a class="page-link" href="${pageMaker.endPage +1}">Next</a>
@@ -119,7 +119,7 @@
   const result = '${bno}';
 
   const myModal = new bootstrap.Modal(document.getElementById('myModal'));
-  console.log(myModal);
+  // console.log(myModal);
 
   if(result){
     myModal.show();
@@ -159,7 +159,42 @@
     actionForm.setAttribute("action", "/board/list");
     actionForm.querySelector("input[name='pageNum']").value = targetPage;
     actionForm.submit();
-  },false)
+  },false);
+
+  //조건검색
+  document.querySelector(".searchBtn").addEventListener("click", evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    const selectObj = document.querySelector("select[name='typeSelect']");
+
+    const selectValue = selectObj.options[selectObj.selectedIndex].value;
+    console.log("selectValue------------------------------------------------------");
+    console.log(selectValue);//T, TCW
+    //구분자를 빈 문자열로 지정하면 각 문자를 구분자로 간주하여 배열로 분할
+    const arr = selectValue.split("");
+    console.log(arr);
+
+    //actionForm 에 hidden 태그로 만들어서 검색조건 추가
+    //페이지 번호도 1페이지로
+    //amount 도 새로 만듬.
+    let str = '';
+
+    str = `<input type='hidden' name='pageNum' value='1'>`;
+    str += `<input type='hidden' name='amount' value='${cri.amount}'>`;
+
+    if(arr && arr.length > 0){
+      for(const type of arr){
+        str += `<input type='hidden' name='types' value='\${type}'>`;
+      }
+    }
+    const keywordValue = document.querySelector("input[name='keywordInput']").value;
+    console.log(keywordValue);
+    str += `<input type='hidden' name='keyword' value='\${keywordValue}'>`;
+    actionForm.innerHTML = str;
+    console.log(str);
+    actionForm.submit();
+  });
 
 </script>
 <%@ include file="../includes/end.jsp"%>

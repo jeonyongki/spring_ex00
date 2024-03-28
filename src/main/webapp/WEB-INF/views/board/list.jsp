@@ -82,8 +82,6 @@
             <a class="page-link" href="${num}">${num} </a>
           </li>
           </c:forEach>
-
-
           <c:if test="${pageMaker.next}">
           <li class="page-item">
             <a class="page-link" href="${pageMaker.endPage +1}">Next</a>

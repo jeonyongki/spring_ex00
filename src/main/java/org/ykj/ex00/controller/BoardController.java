@@ -42,7 +42,10 @@ public class BoardController {
   }
 
   @GetMapping({"/{job}/{bno}"})
-  public String read(@PathVariable(name="job")String job, @PathVariable(name="bno") Long bno, Model model){
+  public String read(@PathVariable(name="job")String job,
+                     @PathVariable(name="bno") Long bno,
+                     @ModelAttribute("cri") Criteria criteria,
+                     Model model){
     log.info("read() job : "+job);
     log.info("read() bno : "+bno);
 
@@ -84,7 +87,7 @@ public class BoardController {
   }
 
   @PostMapping("/modify/{bno}")
-  public String modify(@PathVariable(name="bno") Long bno, BoardVO boardVO){
+  public String modify(@PathVariable(name="bno") Long bno, BoardVO boardVO, RedirectAttributes redirectAttributes){
 
     log.info("modify() bno:"+ bno);
 
@@ -92,6 +95,8 @@ public class BoardController {
 
     log.info(" >> "+boardVO);
     boardService.modify(boardVO);
+
+    redirectAttributes.addFlashAttribute("bno", boardVO.getBno());
 
     return "redirect:/board/read/"+bno;
   }

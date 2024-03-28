@@ -10,8 +10,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="../includes/header.jsp"%>
 
-
-
 <!-- Page Heading -->
 <h1 class="h3 mb-2 text-gray-800">Read</h1>
 <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
@@ -52,30 +50,49 @@
       </div>
       <input type="text" name="writer"class="form-control" value="<c:out value="${vo.writer}"/>"readonly>
     </div>
-      <%--      regDate --%>
-      <div class="input-group input-group-lg">
-        <div class="input-group-prepend">
-          <span class="input-group-text">RegDate</span>
-        </div>
-        <input type="text" name="regDate"class="form-control" value="<c:out value="${vo.regDate}"/>"readonly>
+    <%--      regDate --%>
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text">RegDate</span>
       </div>
+      <input type="text" name="regDate"class="form-control" value="<c:out value="${vo.regDate}"/>"readonly>
+    </div>
     <%--      submit --%>
     <div class="input-group input-group-lg">
       <button class="btn btn-info btnList">LIST</button>
       <button class="btn btn-warning btnModify">MODIFY</button>
     </div>
-
   </div>
 </div>
+
+<form id="actionForm" method="get" action="/board/list">
+  <input type="hidden" name="pageNum" value="${cri.pageNum}">
+  <input type="hidden" name="amount" value="${cri.amount}">
+  <c:if test="${cri.types != null && cri.keyword != null}">
+    <c:forEach var="type" items="${cri.types}">
+      <input type="hidden" name="types" value="${type}">
+    </c:forEach>
+    <input type='hidden' name='keyword' value='<c:out value="${cri.keyword}"/>'>
+  </c:if>
+</form>
+
 <%@ include file="../includes/footer.jsp"%>
 
 <script>
+
+  const actionForm = document.querySelector("#actionForm");
+  const bno = "${vo.bno}";
+
   document.querySelector(".btnList").addEventListener("click",(e) => {
-    window.location = "/board/list";
+    // window.location = "/board/list";
+    actionForm.setAttribute("action","/board/list");
+    actionForm.submit();
   }, false);
 
   document.querySelector(".btnModify").addEventListener("click",(e) => {
-    window.location = "/board/modify/${vo.bno}";
+    <%--window.location = "/board/modify/${vo.bno}";--%>
+    actionForm.setAttribute("action", `/board/modify/${bno}`);
+    actionForm.submit();
   }, false);
 </script>
 
